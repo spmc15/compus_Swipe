@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { GraduationCap, Bell, Settings } from 'lucide-react';
+import { GraduationCap, Bell, Settings, LogOut } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
@@ -48,6 +52,14 @@ export const Navbar: React.FC = () => {
             >
               <Settings className="w-5 h-5 text-gray-600" />
             </Link>
+
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 text-red-600 hover:text-red-700"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
 
             <Link to={`/profile/${user?.id}`} className="flex items-center space-x-2">
               {user?.profilePicture ? (

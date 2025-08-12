@@ -57,10 +57,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setToken(savedToken);
           } else {
             localStorage.removeItem('token');
+            api.setAuthToken(null);
             setToken(null);
           }
         } catch (error) {
           localStorage.removeItem('token');
+          api.setAuthToken(null);
           setToken(null);
         }
       }

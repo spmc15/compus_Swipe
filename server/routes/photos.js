@@ -35,20 +35,13 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
 
     const { caption } = req.body;
 
-    // For demo, use Pexels stock photos
-    const stockPhotos = [
-      'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ];
-
-    const randomPhoto = stockPhotos[Math.floor(Math.random() * stockPhotos.length)];
+    // Convert uploaded file to base64 data URL for demo
+    const imageBuffer = req.file.buffer;
+    const imageBase64 = `data:${req.file.mimetype};base64,${imageBuffer.toString('base64')}`;
 
     const photo = await Photo.create({
       user: req.user.id,
-      imageUrl: randomPhoto,
+      imageUrl: imageBase64,
       cloudinaryId: `demo_${Date.now()}`,
       caption: caption || ''
     });

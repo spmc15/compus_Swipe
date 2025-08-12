@@ -70,7 +70,11 @@ export const Profile: React.FC = () => {
 
   const handleEdit = async () => {
     try {
-      const response = await api.put('/users/profile', editData);
+      const formData = new FormData();
+      formData.append('name', editData.name);
+      formData.append('bio', editData.bio);
+      
+      const response = await api.uploadFile('/users/profile', formData);
       
       if (response.success) {
         setProfile(prev => prev ? { ...prev, ...editData } : null);
@@ -84,6 +88,33 @@ export const Profile: React.FC = () => {
     }
   };
 
+  const handleProfilePictureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('File size must be less than 5MB');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('profilePicture', file);
+      formData.append('name', profile?.name || '');
+      formData.append('bio', profile?.bio || '');
+
+      const response = await api.uploadFile('/users/profile', formData);
+      
+      if (response.success) {
+        setProfile(prev => prev ? { ...prev, profilePicture: response.user.profilePicture } : null);
+        toast.success('Profile picture updated successfully');
+      } else {
+        toast.error('Failed to update profile picture');
+      }
+    } catch (error) {
+      toast.error('Failed to update profile picture');
+    }
+  };
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -128,9 +159,15 @@ export const Profile: React.FC = () => {
             )}
             
             {isOwnProfile && (
-              <button className="absolute bottom-0 right-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition-colors duration-200">
+              <label className="absolute bottom-0 right-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition-colors duration-200 cursor-pointer">
                 <Camera className="w-4 h-4" />
-              </button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleProfilePictureUpload}
+                />
+              </label>
             )}
           </div>
 

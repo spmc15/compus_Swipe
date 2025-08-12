@@ -40,9 +40,10 @@ router.put('/profile', protect, upload.single('profilePicture'), async (req, res
     if (bio !== undefined) user.bio = bio;
 
     if (req.file) {
-      // For demo, we'll use a placeholder URL
-      const profilePictureUrl = `https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400`;
-      user.profilePicture = profilePictureUrl;
+      // Convert uploaded file to base64 data URL for demo
+      const imageBuffer = req.file.buffer;
+      const imageBase64 = `data:${req.file.mimetype};base64,${imageBuffer.toString('base64')}`;
+      user.profilePicture = imageBase64;
     }
 
     await user.save();

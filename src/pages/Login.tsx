@@ -131,7 +131,7 @@ export const Login: React.FC = () => {
 
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">
-            Demo accounts: admin@college.edu / user@college.edu (password: demo123)
+            Demo accounts: admin@college.edu (admin123) / user@college.edu (demo123)
           </p>
         </div>
       </motion.div>
